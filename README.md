@@ -24,7 +24,11 @@ src/main/java/com/example/messaging/
 └── controller/            # API 路由控制器與記憶體資料庫
     └── ChatController.java
 
+```
+
 ## 📁 前端專案結構 (Frontend Structure)
+
+```text
 
 frontend/ (或專案根目錄)
 │
@@ -36,3 +40,5 @@ frontend/ (或專案根目錄)
 └── js/                   # 負責串接 Java API 的大腦 (JavaScript)
     ├── api.js            # 專門用 fetch() 呼叫 Java 控制器的函式 (如 login, sendMsg)
     └── app.js            # 處理按鈕點擊事件、動態更新 HTML 顯示訊息的邏輯
+
+```
