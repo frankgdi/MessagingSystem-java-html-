@@ -42,10 +42,7 @@ frontend/ (或專案根目錄)
     └── app.js            # 處理按鈕點擊事件、動態更新 HTML 顯示訊息的邏輯
 
 ```
-
-# Messaging System (Java + HTML) - 小組報告說明書
-
-```text
+# Messaging System (Java + HTML) - 進度檢核表
 
 這是一個使用 Java Spring Boot 作為後端 API 伺服器，並結合 HTML/CSS/JS 作為前端介面的即時通訊系統。
 
@@ -80,7 +77,5 @@ frontend/ (或專案根目錄)
 
 ## 🚀 簡報與書面進度 (Presentation & Assignment)
 - [ ] 繪製 UML Class Diagram (類別圖)
-- [ ] 製作簡報 PPT (6人黃金分工卡位)
-- [ ] 撰寫書面報告文件 (Outline, Features, Methodology, Conclusion)
-
-```
+- [ ] 製作 6/2 簡報 PPT (6人黃金分工卡位)
+- [ ] 撰寫 10/6 書面報告文件 (Outline, Features, Methodology, Conclusion)
