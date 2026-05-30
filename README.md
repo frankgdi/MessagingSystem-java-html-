@@ -42,9 +42,3 @@ frontend/ (或專案根目錄)
     └── app.js            # 處理按鈕點擊事件、動態更新 HTML 顯示訊息的邏輯
 
 ```
-        - [x] `app.js`（處理按鈕點擊事件、動態更新 HTML 顯示訊息的邏輯）
-
-## 🚀 簡報與書面進度 (Presentation & Assignment)
-- [ ] 繪製 UML Class Diagram (類別圖)
-- [ ] 製作 6/2 簡報 PPT (6人黃金分工卡位)
-- [ ] 撰寫 10/6 書面報告文件 (Outline, Features, Methodology, Conclusion)
