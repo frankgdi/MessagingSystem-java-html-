@@ -62,9 +62,9 @@ frontend/ (或專案根目錄)
         - [x] `JoinGroupData.java`
         - [x] `SendMsgData.java`
         - [x] `EditMsgData.java`
-    - [ ] `controller/` — API 路由與記憶體資料庫
+    - [x] `controller/` — API 路由與記憶體資料庫
         - [x] `ChatController.java` (包含基礎 API 路由與 Fake DB)
-        - [ ] Exception Handling 異常處理機制
+        - [x] Exception Handling 異常處理機制
 
 ## 📁 前端專案進度 (Frontend Implementation)
 
