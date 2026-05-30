@@ -1,4 +1,4 @@
-# Messaging System (Java + HTML) - 小組報告架構
+# Messaging System (Java + HTML) - 小組報告架構說明書
 
 這是一個使用 Java Spring Boot 作為後端 API 伺服器，並結合 HTML/CSS/JS 作為前端介面的即時通訊系統。
 
