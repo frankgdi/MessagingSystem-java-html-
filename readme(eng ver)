@@ -5,6 +5,7 @@ This is a real-time messaging system built with Java Spring Boot as the backend 
 ## 📁 Backend Project Structure
 
 ```text
+
 src/main/java/com/example/messaging/
 │
 ├── model/                 # Core domain models (Object logic)
@@ -23,3 +24,5 @@ src/main/java/com/example/messaging/
 │
 └── controller/            # API routing controllers and in-memory database
     └── ChatController.java
+
+```
