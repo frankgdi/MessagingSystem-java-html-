@@ -9,28 +9,34 @@ import java.util.Map;
 public class UserDB {
     private Map<Integer, User> db = new HashMap<>();
 
+    // 儲存或更新使用者
     public void save(User user) {
         db.put(user.getUserId(), user);
     }
-    
+
+    // 建構子：預設初始資料
     public UserDB() {
-        // 預設一筆測試帳號
         User alice = new User(1, "Alice");
         alice.setPassword("1234");
         db.put(1, alice);
 
         User bob = new User(2, "Bob");
-        bob.setPassword("5678"); // Bob 的密碼是 5678
+        bob.setPassword("5678");
         db.put(2, bob);
     }
 
+    // 透過名稱查找使用者
     public User findUserByUsername(String username) {
+        if (username == null) return null;
         for (User u : db.values()) {
-            if (u.getName().equalsIgnoreCase(username.trim())) return u;
+            if (u.getName() != null && u.getName().equalsIgnoreCase(username.trim())) {
+                return u;
+            }
         }
         return null;
     }
 
+    // 透過 ID 查找使用者
     public User findById(int id) {
         return db.get(id);
     }
