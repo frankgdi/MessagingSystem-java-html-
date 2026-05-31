@@ -32,15 +32,15 @@ src/main/java/com/example/messaging/
 
 ```text
 
-frontend/ (或專案根目錄)
+src/main/resources/static/
 │
-├── index.html            # 登入與主控制台畫面 (HTML 骨架)
+├── index.html             # 登入與主控制台畫面
 │
-├── css/                  # 負責美化介面的衣服
-│   └── style.css         # 聊天室排版、對話泡泡、按鈕顏色
+├── css/                   # 樣式表
+│   └── style.css          # 聊天室排版、對話泡泡、按鈕顏色
 │
-└── js/                   # 負責串接 Java API 的大腦 (JavaScript)
-    ├── api.js            # 專門用 fetch() 呼叫 Java 控制器的函式 (如 login, sendMsg)
-    └── app.js            # 處理按鈕點擊事件、動態更新 HTML 顯示訊息的邏輯
+└── js/                    # JavaScript 邏輯層
+    ├── api.js             # API 請求串接 (fetch)
+    └── app.js             # 前端事件處理與動態渲染
 
 ```
