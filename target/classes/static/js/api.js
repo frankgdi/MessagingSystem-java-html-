@@ -1,5 +1,6 @@
 const apiUrl = "http://localhost:8080";
 
+// 底層通用請求大腦
 async function requestApi(url, method = "GET", body = null) {
     const options = {
         method: method,
@@ -22,100 +23,77 @@ async function requestApi(url, method = "GET", body = null) {
     return data;
 }
 
-// 登入
-// LoginData 如果沒有 @JsonProperty，這裡維持 name 即可
+// 1. 登入
 function apiLogin(name) {
     return requestApi("/login", "POST", {
         name: name
     });
 }
 
-// 取得好友列表
+// 2. 取得好友列表
 function apiGetFriends(userId) {
     return requestApi("/friends/" + userId, "GET");
 }
 
-// 加好友
-// 對應 AddFriendData.java:
-// @JsonProperty("user_id")
-// @JsonProperty("friend_name")
+// 3. 加好友 (對齊 AddFriendData.java 欄位)
 function apiAddFriend(userId, friendName) {
     return requestApi("/friends/add", "POST", {
-        user_id: userId,
-        friend_name: friendName
+        userId: userId,
+        friendName: friendName
     });
 }
 
-// 建立私人聊天室
-// 對應 PrivateChatData.java:
-// @JsonProperty("user_id")
-// @JsonProperty("friend_id")
+// 4. 建立私人聊天室 (對齊 PrivateChatData.java 欄位)
 function apiCreatePrivateChat(userId, friendId) {
     return requestApi("/private-chat", "POST", {
-        user_id: userId,
-        friend_id: friendId
+        userId: userId,
+        friendId: friendId
     });
 }
 
-// 建立群組
-// 對應 CreateGroupData.java:
-// @JsonProperty("user_id")
-// @JsonProperty("group_name")
+// 5. 建立群組 (對齊 CreateGroupData.java 欄位)
 function apiCreateGroup(userId, groupName) {
     return requestApi("/groups/create", "POST", {
-        user_id: userId,
-        group_name: groupName
+        userId: userId,
+        groupName: groupName
     });
 }
 
-// 加入群組
-// 對應 JoinGroupData.java:
-// @JsonProperty("user_id")
-// @JsonProperty("group_name")
+// 6. 加入群組 (對齊 JoinGroupData.java 欄位)
 function apiJoinGroup(userId, groupName) {
     return requestApi("/groups/join-by-name", "POST", {
-        user_id: userId,
-        group_name: groupName
+        userId: userId,
+        groupName: groupName
     });
 }
 
-// 取得聊天室
-// 這裡後端本來就是 @RequestParam("user_id")
-// 所以網址仍然是 user_id
+// 7. 取得聊天室列表
 function apiGetChats(userId) {
     return requestApi("/chats?user_id=" + userId, "GET");
 }
 
-// 取得訊息
+// 8. 取得聊天室內的訊息
 function apiGetMessages(chatId) {
     return requestApi("/chats/" + chatId + "/messages", "GET");
 }
 
-// 送訊息
-// 對應 SendMsgData.java:
-// @JsonProperty("sender_id")
-// content
+// 9. 發送訊息 (對齊 SendMsgData.java 欄位)
 function apiSendMessage(chatId, senderId, content) {
     return requestApi("/chats/" + chatId + "/messages", "POST", {
-        sender_id: senderId,
+        senderId: senderId,
         content: content
     });
 }
 
-// 編輯訊息
-// 對應 EditMsgData.java:
-// @JsonProperty("user_id")
-// @JsonProperty("new_content")
+// 10. 編輯訊息 (對齊 EditMsgData.java 欄位)
 function apiEditMessage(chatId, messageId, userId, newContent) {
     return requestApi("/chats/" + chatId + "/messages/" + messageId, "PUT", {
-        user_id: userId,
-        new_content: newContent
+        userId: userId,
+        newContent: newContent
     });
 }
 
-// 刪除訊息
-// 這裡後端是 @RequestParam("user_id")
-// 所以網址仍然是 user_id
+// 11. 刪除訊息
 function apiDeleteMessage(chatId, messageId, userId) {
     return requestApi(
         "/chats/" + chatId + "/messages/" + messageId + "?user_id=" + userId,
