@@ -1,7 +1,14 @@
 package com.example.messaging.dto;
 
 public class LoginData {
-    private String name;
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    private String username;
+    private String password;
+
+    // Getters
+    public String getUsername() { return username; }
+    public String getPassword() { return password; }
+
+    // Setters
+    public void setUsername(String username) { this.username = username; }
+    public void setPassword(String password) { this.password = password; }
 }
