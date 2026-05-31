@@ -9,11 +9,19 @@ import java.util.Map;
 public class UserDB {
     private Map<Integer, User> db = new HashMap<>();
 
+    public void save(User user) {
+        db.put(user.getUserId(), user);
+    }
+    
     public UserDB() {
         // 預設一筆測試帳號
         User alice = new User(1, "Alice");
         alice.setPassword("1234");
         db.put(1, alice);
+
+        User bob = new User(2, "Bob");
+        bob.setPassword("5678"); // Bob 的密碼是 5678
+        db.put(2, bob);
     }
 
     public User findUserByUsername(String username) {
