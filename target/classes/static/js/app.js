@@ -2,6 +2,7 @@ let currentUser = null;
 let currentChat = null;
 let refreshTimer = null;
 
+// 顯示提示訊息 (防呆用)
 function showMessage(elementId, text, isError = false) {
     const element = document.getElementById(elementId);
     element.innerText = text;
@@ -13,12 +14,13 @@ function showMessage(elementId, text, isError = false) {
     }
 }
 
+// 登入功能
 async function login() {
     const nameInput = document.getElementById("loginNameInput");
     const name = nameInput.value.trim();
 
     if (name === "") {
-        showMessage("loginMessage", "Please eneter your name.", true);
+        showMessage("loginMessage", "Please enter your name.", true);
         return;
     }
 
@@ -40,6 +42,7 @@ async function login() {
     }
 }
 
+// 載入好友列表
 async function loadFriends() {
     if (currentUser === null) {
         return;
@@ -62,7 +65,8 @@ async function loadFriends() {
             div.innerText = friend.name;
 
             div.onclick = function() {
-                createPrivateChat(friend.user_id);
+                // 修正：後端傳回的是 userId，不是 user_id
+                createPrivateChat(friend.userId);
             };
 
             friendList.appendChild(div);
@@ -74,6 +78,7 @@ async function loadFriends() {
     }
 }
 
+// 新增好友
 async function addFriend() {
     if (currentUser === null) {
         alert("Please log in first.");
@@ -102,6 +107,7 @@ async function addFriend() {
     }
 }
 
+// 建立私人聊天室
 async function createPrivateChat(friendId) {
     try {
         const data = await apiCreatePrivateChat(currentUser.userId, friendId);
@@ -117,6 +123,7 @@ async function createPrivateChat(friendId) {
     }
 }
 
+// 建立群組
 async function createGroup() {
     if (currentUser === null) {
         alert("Please log in first.");
@@ -146,6 +153,7 @@ async function createGroup() {
     }
 }
 
+// 加入群組
 async function joinGroup() {
     if (currentUser === null) {
         alert("Please log in first.");
@@ -175,6 +183,7 @@ async function joinGroup() {
     }
 }
 
+// 載入聊天室列表
 async function loadChats() {
     if (currentUser === null) {
         return;
@@ -195,11 +204,13 @@ async function loadChats() {
             const div = document.createElement("div");
             div.className = "item";
 
-            if (currentChat !== null && currentChat.chat_id === chat.chat_id) {
+            // 修正：後端回傳的是 chatId，不是 chat_id
+            if (currentChat !== null && currentChat.chatId === chat.chatId) {
                 div.className = "item active";
             }
 
-            div.innerText = chat.chat_name + " (" + chat.chat_type + ")";
+            // 修正：後端回傳的是 chatName 與 chatType
+            div.innerText = chat.chatName + " (" + chat.chatType + ")";
 
             div.onclick = function() {
                 openChat(chat);
@@ -214,12 +225,14 @@ async function loadChats() {
     }
 }
 
+// 點擊開啟聊天室
 async function openChat(chat) {
     currentChat = chat;
 
-    document.getElementById("chatTitle").innerText = chat.chat_name;
+    // 修正：後端回傳的是 chatName, chatType, memberNames
+    document.getElementById("chatTitle").innerText = chat.chatName;
     document.getElementById("chatInfo").innerText =
-        "Type: " + chat.chat_type + "| Members: " + chat.member_names.join(", ");
+        "Type: " + chat.chatType + " | Members: " + chat.memberNames.join(", ");
 
     await loadMessages();
     await loadChats();
@@ -231,13 +244,15 @@ async function openChat(chat) {
     refreshTimer = setInterval(loadMessages, 2000);
 }
 
+// 載入聊天室內的訊息 (每2秒輪詢一次)
 async function loadMessages() {
     if (currentChat === null) {
         return;
     }
 
     try {
-        const messages = await apiGetMessages(currentChat.chat_id);
+        // 修正：後端回傳的是 chatId
+        const messages = await apiGetMessages(currentChat.chatId);
 
         const chatArea = document.getElementById("chatArea");
         chatArea.innerHTML = "";
@@ -250,7 +265,8 @@ async function loadMessages() {
         messages.forEach(function(message) {
             const div = document.createElement("div");
 
-            if (message.sender_id === currentUser.userId) {
+            // 修正：後端回傳的是 senderId
+            if (message.senderId === currentUser.userId) {
                 div.className = "message my-message";
             } else {
                 div.className = "message";
@@ -258,12 +274,14 @@ async function loadMessages() {
 
             const nameDiv = document.createElement("div");
             nameDiv.className = "message-name";
-            nameDiv.innerText = message.sender_name;
+            // 修正：後端回傳的是 senderName
+            nameDiv.innerText = message.senderName;
 
             const contentDiv = document.createElement("div");
             contentDiv.className = "message-content";
 
-            if (message.is_deleted) {
+            // 修正：後端回傳的是 deleted
+            if (message.deleted) {
                 contentDiv.innerText = "This message has been deleted.";
                 contentDiv.style.color = "#888";
             } else {
@@ -273,20 +291,23 @@ async function loadMessages() {
             div.appendChild(nameDiv);
             div.appendChild(contentDiv);
 
-            if (message.sender_id === currentUser.userId && !message.is_deleted) {
+            // 修正：防呆判斷與編輯/刪除綁定欄位
+            if (message.senderId === currentUser.userId && !message.deleted) {
                 const actionDiv = document.createElement("div");
                 actionDiv.className = "message-actions";
 
                 const editButton = document.createElement("button");
                 editButton.innerText = "Edit";
                 editButton.onclick = function() {
-                    editMessage(message.message_id, message.content);
+                    // 修正：後端回傳的是 messageId
+                    editMessage(message.messageId, message.content);
                 };
 
                 const deleteButton = document.createElement("button");
                 deleteButton.innerText = "Delete";
                 deleteButton.onclick = function() {
-                    deleteMessage(message.message_id);
+                    // 修正：後端回傳的是 messageId
+                    deleteMessage(message.messageId);
                 };
 
                 actionDiv.appendChild(editButton);
@@ -304,6 +325,7 @@ async function loadMessages() {
     }
 }
 
+// 發送訊息
 async function sendMessage() {
     if (currentChat === null) {
         alert("Please select a chat first.");
@@ -319,7 +341,7 @@ async function sendMessage() {
 
     try {
         await apiSendMessage(
-            currentChat.chat_id,
+            currentChat.chatId, // 修正
             currentUser.userId,
             content
         );
@@ -333,6 +355,7 @@ async function sendMessage() {
     }
 }
 
+// 編輯訊息
 async function editMessage(messageId, oldContent) {
     const newContent = prompt("Enter the new message content:", oldContent);
 
@@ -342,7 +365,7 @@ async function editMessage(messageId, oldContent) {
 
     try {
         await apiEditMessage(
-            currentChat.chat_id,
+            currentChat.chatId, // 修正
             messageId,
             currentUser.userId,
             newContent.trim()
@@ -356,6 +379,7 @@ async function editMessage(messageId, oldContent) {
     }
 }
 
+// 刪除訊息
 async function deleteMessage(messageId) {
     const ok = confirm("Are you sure you want to delete this message?");
 
@@ -365,7 +389,7 @@ async function deleteMessage(messageId) {
 
     try {
         await apiDeleteMessage(
-            currentChat.chat_id,
+            currentChat.chatId, // 修正
             messageId,
             currentUser.userId
         );
@@ -378,6 +402,7 @@ async function deleteMessage(messageId) {
     }
 }
 
+// 鍵盤監聽事件 (按 Enter 直接送出)
 document.getElementById("messageInput").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
         sendMessage();
