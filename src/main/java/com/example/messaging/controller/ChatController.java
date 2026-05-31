@@ -9,34 +9,50 @@ import java.util.*;
 @CrossOrigin(origins = "*")
 public class ChatController {
 
-    // 這裡保留你原本的聊天室邏輯
-    // 注意：這裡已經沒有 /login 的 POST 請求了！
-
+    // 取得好友列表 - 修復參數名稱
     @GetMapping("/friends/{userId}")
-    public List<User> getFriends(@PathVariable int userId) {
-        // 實作你的邏輯
+    public List<User> getFriends(@PathVariable("userId") int userId) {
+        // 這裡回傳你的邏輯
         return new ArrayList<>(); 
     }
 
+    // 加好友
     @PostMapping("/friends/add")
     public Map<String, String> addFriend(@RequestBody AddFriendData data) {
         return Map.of("message", "Friend added successfully");
     }
 
+    // 取得聊天室列表 - 修復參數名稱
     @GetMapping("/chats")
     public List<ChatRoom> getChats(@RequestParam("user_id") int userId) {
         return new ArrayList<>();
     }
 
+    // 取得訊息 - 修復參數名稱
     @GetMapping("/chats/{chatId}/messages")
-    public List<Message> getMessages(@PathVariable String chatId) {
+    public List<Message> getMessages(@PathVariable("chatId") String chatId) {
         return new ArrayList<>();
     }
 
+    // 送訊息 - 修復參數名稱
     @PostMapping("/chats/{chatId}/messages")
-    public void sendMessage(@PathVariable String chatId, @RequestBody SendMsgData data) {
-        // 實作送訊息邏輯
+    public void sendMessage(@PathVariable("chatId") String chatId, @RequestBody SendMsgData data) {
+        // 處理發送訊息邏輯
     }
-    
-    // 其他編輯、刪除訊息的 API...
+
+    // 編輯訊息 - 修復參數名稱
+    @PutMapping("/chats/{chatId}/messages/{messageId}")
+    public void editMessage(@PathVariable("chatId") String chatId, 
+                            @PathVariable("messageId") String messageId, 
+                            @RequestBody EditMsgData data) {
+        // 處理編輯訊息邏輯
+    }
+
+    // 刪除訊息 - 修復參數名稱
+    @DeleteMapping("/chats/{chatId}/messages/{messageId}")
+    public void deleteMessage(@PathVariable("chatId") String chatId, 
+                              @PathVariable("messageId") String messageId, 
+                              @RequestParam("user_id") int userId) {
+        // 處理刪除訊息邏輯
+    }
 }
