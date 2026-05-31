@@ -1,0 +1,12 @@
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/MessagingApplication.java
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/controller/ChatController.java
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/dto/AddFriendData.java
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/dto/CreateGroupData.java
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/dto/EditMsgData.java
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/dto/JoinGroupData.java
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/dto/LoginData.java
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/dto/PrivateChatData.java
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/dto/SendMsgData.java
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/model/ChatRoom.java
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/model/Message.java
+/Users/hui/Documents/二下/oop/group/MessagingSystem-java-html-/src/main/java/com/example/messaging/model/User.java

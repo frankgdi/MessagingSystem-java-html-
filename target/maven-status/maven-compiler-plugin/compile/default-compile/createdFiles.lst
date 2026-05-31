@@ -1,0 +1,15 @@
+com/example/messaging/controller/BadRequestException.class
+com/example/messaging/model/User.class
+com/example/messaging/dto/CreateGroupData.class
+com/example/messaging/controller/ResourceNotFoundException.class
+com/example/messaging/dto/SendMsgData.class
+com/example/messaging/controller/UnauthorizedException.class
+com/example/messaging/dto/LoginData.class
+com/example/messaging/dto/EditMsgData.class
+com/example/messaging/dto/JoinGroupData.class
+com/example/messaging/model/Message.class
+com/example/messaging/dto/AddFriendData.class
+com/example/messaging/controller/ChatController.class
+com/example/messaging/MessagingApplication.class
+com/example/messaging/dto/PrivateChatData.class
+com/example/messaging/model/ChatRoom.class

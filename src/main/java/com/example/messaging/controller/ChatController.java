@@ -5,21 +5,28 @@ import com.example.messaging.model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.*;
 
 // =========================================================================
-// 1. Custom Exceptions (展現 OOP 繼承，將錯誤分類)
+// 1. Custom Exceptions
 // =========================================================================
 class BadRequestException extends RuntimeException {
-    public BadRequestException(String message) { super(message); }
+    public BadRequestException(String message) {
+        super(message);
+    }
 }
 
 class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String message) { super(message); }
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
 }
 
 class UnauthorizedException extends RuntimeException {
-    public UnauthorizedException(String message) { super(message); }
+    public UnauthorizedException(String message) {
+        super(message);
+    }
 }
 
 // =========================================================================
@@ -47,26 +54,40 @@ public class ChatController {
     }
 
     // =========================================================================
-    // 3. Exception Handlers (集中管理大腦，自動將 Java 錯誤轉成前端 HTTP 狀態碼)
+    // 3. Exception Handlers
     // =========================================================================
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<Map<String, String>> handleBadRequest(BadRequestException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", ex.getMessage()));
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleNotFound(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", ex.getMessage()));
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", ex.getMessage()));
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<Map<String, String>> handleUnauthorized(UnauthorizedException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", ex.getMessage()));
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(Map.of("error", ex.getMessage()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleOtherError(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Internal Server Error: " + ex.getMessage()));
     }
 
     // =========================================================================
-    // 4. API Endpoints (這裡的程式碼變得超級乾淨，只專注在商業邏輯！)
+    // 4. API Endpoints
     // =========================================================================
+
     @GetMapping("/")
     public Map<String, String> home() {
         return Map.of("message", "Chat Messaging System Backend is running.");
@@ -79,24 +100,32 @@ public class ChatController {
         }
 
         User oldUser = findUserByName(data.getName());
+
         if (oldUser != null) {
-            return Map.of("message", "Login successfully.", "user", oldUser);
+            return Map.of(
+                    "message", "Login successfully.",
+                    "user", oldUser
+            );
         }
 
         int newId = nextUserId++;
         User newUser = new User(newId, data.getName().trim());
         users.put(newId, newUser);
 
-        return Map.of("message", "New user created and logged in.", "user", newUser);
+        return Map.of(
+                "message", "New user created and logged in.",
+                "user", newUser
+        );
     }
 
     @GetMapping("/friends/{userId}")
-    public List<Map<String, Object>> getFriends(@PathVariable int userId) {
+    public List<Map<String, Object>> getFriends(@PathVariable("userId") int userId) {
         if (!users.containsKey(userId)) {
             throw new ResourceNotFoundException("User not found.");
         }
 
         List<Map<String, Object>> friendList = new ArrayList<>();
+
         for (int friendId : users.get(userId).getFriends()) {
             if (users.containsKey(friendId)) {
                 friendList.add(Map.of(
@@ -105,6 +134,7 @@ public class ChatController {
                 ));
             }
         }
+
         return friendList;
     }
 
@@ -115,6 +145,7 @@ public class ChatController {
         }
 
         User friend = findUserByName(data.getFriendName());
+
         if (friend == null) {
             throw new ResourceNotFoundException("Friend not found.");
         }
@@ -126,7 +157,10 @@ public class ChatController {
         users.get(data.getUserId()).addFriend(friend.getUserId());
         friend.addFriend(data.getUserId());
 
-        return Map.of("message", "Friend added successfully.", "friend", friend);
+        return Map.of(
+                "message", "Friend added successfully.",
+                "friend", friend
+        );
     }
 
     @PostMapping("/private-chat")
@@ -143,15 +177,31 @@ public class ChatController {
             if (room.getChatType().equals("private")
                     && room.getMembers().contains(data.getUserId())
                     && room.getMembers().contains(data.getFriendId())) {
-                return Map.of("message", "Private chat already exists.", "chat", chatToMap(room));
+
+                return Map.of(
+                        "message", "Private chat already exists.",
+                        "chat", chatToMap(room)
+                );
             }
         }
 
-        String chatName = users.get(data.getUserId()).getName() + " & " + users.get(data.getFriendId()).getName();
-        ChatRoom newChat = new ChatRoom(nextChatId++, chatName, "private", List.of(data.getUserId(), data.getFriendId()));
+        String chatName = users.get(data.getUserId()).getName()
+                + " & "
+                + users.get(data.getFriendId()).getName();
+
+        ChatRoom newChat = new ChatRoom(
+                nextChatId++,
+                chatName,
+                "private",
+                List.of(data.getUserId(), data.getFriendId())
+        );
+
         chats.put(newChat.getChatId(), newChat);
 
-        return Map.of("message", "Private chat created successfully.", "chat", chatToMap(newChat));
+        return Map.of(
+                "message", "Private chat created successfully.",
+                "chat", chatToMap(newChat)
+        );
     }
 
     @PostMapping("/groups/create")
@@ -168,10 +218,19 @@ public class ChatController {
             throw new BadRequestException("Group already exists.");
         }
 
-        ChatRoom group = new ChatRoom(nextChatId++, data.getGroupName().trim(), "group", List.of(data.getUserId()));
+        ChatRoom group = new ChatRoom(
+                nextChatId++,
+                data.getGroupName().trim(),
+                "group",
+                List.of(data.getUserId())
+        );
+
         chats.put(group.getChatId(), group);
 
-        return Map.of("message", "Group created successfully.", "chat", chatToMap(group));
+        return Map.of(
+                "message", "Group created successfully.",
+                "chat", chatToMap(group)
+        );
     }
 
     @PostMapping("/groups/join-by-name")
@@ -181,12 +240,17 @@ public class ChatController {
         }
 
         ChatRoom group = findGroupByName(data.getGroupName());
+
         if (group == null) {
             throw new ResourceNotFoundException("Group not found.");
         }
 
         group.addMember(data.getUserId());
-        return Map.of("message", "Joined group successfully.", "chat", chatToMap(group));
+
+        return Map.of(
+                "message", "Joined group successfully.",
+                "chat", chatToMap(group)
+        );
     }
 
     @GetMapping("/chats")
@@ -196,37 +260,54 @@ public class ChatController {
         }
 
         List<Map<String, Object>> result = new ArrayList<>();
+
         for (ChatRoom chat : chats.values()) {
             if (chat.getMembers().contains(userId)) {
                 result.add(chatToMap(chat));
             }
         }
+
         return result;
     }
 
     @GetMapping("/chats/{chatId}/messages")
-    public List<Map<String, Object>> getMessages(@PathVariable int chatId) {
+    public List<Map<String, Object>> getMessages(@PathVariable("chatId") int chatId) {
         if (!chats.containsKey(chatId)) {
             throw new ResourceNotFoundException("Chat room not found.");
         }
 
         List<Map<String, Object>> result = new ArrayList<>();
+
         for (Message msg : chats.get(chatId).getMessages()) {
             result.add(messageToMap(msg));
         }
+
         return result;
     }
 
     @PostMapping("/chats/{chatId}/messages")
-    public Map<String, Object> sendMessage(@PathVariable int chatId, @RequestBody SendMsgData data) {
+    public Map<String, Object> sendMessage(
+            @PathVariable("chatId") int chatId,
+            @RequestBody SendMsgData data) {
+
         if (!chats.containsKey(chatId)) {
             throw new ResourceNotFoundException("Chat room not found.");
         }
 
         try {
             ChatRoom chat = chats.get(chatId);
-            Message newMsg = chat.addMessage(data.getSenderId(), data.getContent(), nextMsgId++);
-            return Map.of("message", "Message sent successfully.", "data", messageToMap(newMsg));
+
+            Message newMsg = chat.addMessage(
+                    data.getSenderId(),
+                    data.getContent(),
+                    nextMsgId++
+            );
+
+            return Map.of(
+                    "message", "Message sent successfully.",
+                    "data", messageToMap(newMsg)
+            );
+
         } catch (SecurityException e) {
             throw new UnauthorizedException(e.getMessage());
         } catch (IllegalArgumentException e) {
@@ -235,7 +316,11 @@ public class ChatController {
     }
 
     @PutMapping("/chats/{chatId}/messages/{msgId}")
-    public Map<String, Object> editMessage(@PathVariable int chatId, @PathVariable int msgId, @RequestBody EditMsgData data) {
+    public Map<String, Object> editMessage(
+            @PathVariable("chatId") int chatId,
+            @PathVariable("msgId") int msgId,
+            @RequestBody EditMsgData data) {
+
         if (!chats.containsKey(chatId)) {
             throw new ResourceNotFoundException("Chat room not found.");
         }
@@ -252,11 +337,19 @@ public class ChatController {
         }
 
         msg.edit(data.getNewContent());
-        return Map.of("message", "Message edited successfully.", "data", messageToMap(msg));
+
+        return Map.of(
+                "message", "Message edited successfully.",
+                "data", messageToMap(msg)
+        );
     }
 
     @DeleteMapping("/chats/{chatId}/messages/{msgId}")
-    public Map<String, String> deleteMessage(@PathVariable int chatId, @PathVariable int msgId, @RequestParam("user_id") int userId) {
+    public Map<String, String> deleteMessage(
+            @PathVariable("chatId") int chatId,
+            @PathVariable("msgId") int msgId,
+            @RequestParam("user_id") int userId) {
+
         if (!chats.containsKey(chatId)) {
             throw new ResourceNotFoundException("Chat room not found.");
         }
@@ -273,32 +366,48 @@ public class ChatController {
         }
 
         msg.delete();
+
         return Map.of("message", "Message deleted successfully.");
     }
 
     // =========================================================================
     // 5. Private Helper Methods
     // =========================================================================
+
     private User findUserByName(String name) {
-        if (name == null) return null;
-        for (User u : users.values()) {
-            if (u.getName().equalsIgnoreCase(name.trim())) return u;
+        if (name == null) {
+            return null;
         }
+
+        for (User user : users.values()) {
+            if (user.getName().equalsIgnoreCase(name.trim())) {
+                return user;
+            }
+        }
+
         return null;
     }
 
     private ChatRoom findGroupByName(String groupName) {
-        if (groupName == null) return null;
-        for (ChatRoom c : chats.values()) {
-            if (c.getChatType().equals("group") && c.getChatName().equalsIgnoreCase(groupName.trim())) {
-                return c;
+        if (groupName == null) {
+            return null;
+        }
+
+        for (ChatRoom chat : chats.values()) {
+            if (chat.getChatType().equals("group")
+                    && chat.getChatName().equalsIgnoreCase(groupName.trim())) {
+                return chat;
             }
         }
+
         return null;
     }
 
     private String getUserName(int userId) {
-        if (!users.containsKey(userId)) return "Unknown";
+        if (!users.containsKey(userId)) {
+            return "Unknown";
+        }
+
         return users.get(userId).getName();
     }
 
@@ -315,9 +424,11 @@ public class ChatController {
 
     private Map<String, Object> chatToMap(ChatRoom chat) {
         List<String> memberNames = new ArrayList<>();
+
         for (int id : chat.getMembers()) {
             memberNames.add(getUserName(id));
         }
+
         return Map.of(
                 "chat_id", chat.getChatId(),
                 "chat_name", chat.getChatName(),

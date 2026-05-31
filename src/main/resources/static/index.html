@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Messaging System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="login-page" id="loginPage">
+    <div class="login-box">
+        <h1>Login</h1>
+
+        <input type="text" id="loginNameInput" placeholder="Enter your name, e.g. Alice">
+        <button onclick="login()">Login / Create User</button>
+
+        <div id="loginMessage"></div>
+    </div>
+</div>
+
+<div class="main-page" id="mainPage">
+
+    <div class="left">
+        <h2>Chat System</h2>
+
+        <p class="small-text">
+            Current user:
+            <span id="currentUserName"></span>
+        </p>
+
+        <div class="section">
+            <h3>Add Friend</h3>
+            <input type="text" id="friendNameInput" placeholder="Enter friend's name">
+            <button onclick="addFriend()">Add Friend</button>
+            <div id="friendMessage"></div>
+        </div>
+
+        <div class="section">
+            <h3>Friend List</h3>
+            <div id="friendList"></div>
+        </div>
+
+        <div class="section">
+            <h3>Create Group</h3>
+            <input type="text" id="createGroupInput" placeholder="Group name">
+            <button onclick="createGroup()">Create Group</button>
+            <div id="createGroupMessage"></div>
+        </div>
+
+        <div class="section">
+            <h3>Join Group</h3>
+            <input type="text" id="joinGroupInput" placeholder="Enter group name">
+            <button onclick="joinGroup()">Join Group</button>
+            <div id="joinGroupMessage"></div>
+        </div>
+
+        <div class="section">
+            <h3>Chat List</h3>
+            <button onclick="loadChats()">Refresh Chats</button>
+            <div id="chatList"></div>
+        </div>
+    </div>
+
+    <div class="center">
+        <div class="top-bar">
+            <h2 id="chatTitle">No chat selected</h2>
+            <p class="small-text" id="chatInfo">Select a chat from the left panel</p>
+        </div>
+
+        <div class="chat-area" id="chatArea"></div>
+
+        <div class="bottom-bar">
+            <input type="text" id="messageInput" placeholder="Type a message">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
