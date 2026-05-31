@@ -1,42 +1,42 @@
 package com.example.messaging.controller;
 
-import com.example.messaging.dto.LoginData;
-import com.example.messaging.service.AuthService;
-import com.example.messaging.service.TokenService;
-import com.example.messaging.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import com.example.messaging.model.*;
+import com.example.messaging.dto.*;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "*")
-public class LoginController {
+public class ChatController {
 
-    @Autowired
-    private AuthService authService;
+    // 這裡保留你原本的聊天室邏輯
+    // 注意：這裡已經沒有 /login 的 POST 請求了！
 
-    @Autowired
-    private TokenService tokenService;
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginData data) {
-        // 驗證帳號密碼
-        boolean isAuth = authService.verifyCredentials(data.getUsername(), data.getPassword());
-        
-        if (!isAuth) {
-            return ResponseEntity.status(401).body(Map.of("error", "Login failed"));
-        }
-
-        // 登入成功，取得 User 並發送 Token
-        User user = authService.getUserByUsername(data.getUsername());
-        String token = tokenService.generateToken(user.getUserId());
-
-        return ResponseEntity.ok(Map.of(
-            "message", "Login successfully.",
-            "user", user,
-            "token", token
-        ));
+    @GetMapping("/friends/{userId}")
+    public List<User> getFriends(@PathVariable int userId) {
+        // 實作你的邏輯
+        return new ArrayList<>(); 
     }
+
+    @PostMapping("/friends/add")
+    public Map<String, String> addFriend(@RequestBody AddFriendData data) {
+        return Map.of("message", "Friend added successfully");
+    }
+
+    @GetMapping("/chats")
+    public List<ChatRoom> getChats(@RequestParam("user_id") int userId) {
+        return new ArrayList<>();
+    }
+
+    @GetMapping("/chats/{chatId}/messages")
+    public List<Message> getMessages(@PathVariable String chatId) {
+        return new ArrayList<>();
+    }
+
+    @PostMapping("/chats/{chatId}/messages")
+    public void sendMessage(@PathVariable String chatId, @RequestBody SendMsgData data) {
+        // 實作送訊息邏輯
+    }
+    
+    // 其他編輯、刪除訊息的 API...
 }
