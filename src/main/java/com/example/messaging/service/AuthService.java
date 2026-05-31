@@ -7,18 +7,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
-
     @Autowired
     private UserDB userDb;
 
-    public boolean verifyCredentials(String username, String password) {
-        User user = userDb.findUserByUsername(username);
-        if (user == null) return false;
-        
-        return user.getPassword().equals(password);
-    }
+    public boolean verifyCredentials(String username, String password) { /* ... */ }
 
-    public User getUserByUsername(String username) {
-        return userDb.findUserByUsername(username);
+    // 【新增這一段】
+    public User createNewUser(String username, String password) {
+        // 先建立 User 物件
+        int newId = (int) (System.currentTimeMillis() % 10000); 
+        User newUser = new User(newId, username);
+        newUser.setPassword(password);
+        // 存入 DB
+        userDb.save(newUser);
+        return newUser;
     }
 }
