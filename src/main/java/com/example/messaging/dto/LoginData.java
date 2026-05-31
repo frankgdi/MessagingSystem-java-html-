@@ -4,6 +4,9 @@ public class LoginData {
     private String username;
     private String password;
 
+    // 【關鍵】補上這個無參數建構子，這能解決 500 Error
+    public LoginData() {}
+
     // Getters
     public String getUsername() { return username; }
     public String getPassword() { return password; }
