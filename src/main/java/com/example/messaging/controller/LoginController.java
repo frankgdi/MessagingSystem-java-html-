@@ -21,20 +21,30 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginData data) {
-        // 1. 驗證帳密
-        boolean isAuth = authService.verifyCredentials(data.getUsername(), data.getPassword());
-        
-        if (!isAuth) {
-            return ResponseEntity.status(401).body(Map.of("error", "Login failed: Invalid credentials"));
+        // 1. 嘗試根據帳號名取得用戶
+        User user = authService.getUserByUsername(data.getUsername());
+
+        // 2. 如果用戶不存在，自動執行註冊邏輯
+        if (user == null) {
+            user = authService.createNewUser(data.getUsername(), data.getPassword());
+            String token = tokenService.generateToken(user.getUserId());
+            return ResponseEntity.ok(Map.of(
+                "message", "User created and logged in.", 
+                "user", user, 
+                "token", token
+            ));
         }
 
-        // 2. 登入成功，取得 User 與 Token
-        User user = authService.getUserByUsername(data.getUsername());
-        String token = tokenService.generateToken(user.getUserId());
+        // 3. 如果用戶已存在，驗證密碼
+        if (!user.getPassword().equals(data.getPassword())) {
+            return ResponseEntity.status(401).body(Map.of("error", "Wrong password"));
+        }
 
+        // 4. 登入成功
+        String token = tokenService.generateToken(user.getUserId());
         return ResponseEntity.ok(Map.of(
-            "message", "Login successfully.",
-            "user", user,
+            "message", "Login successfully.", 
+            "user", user, 
             "token", token
         ));
     }
