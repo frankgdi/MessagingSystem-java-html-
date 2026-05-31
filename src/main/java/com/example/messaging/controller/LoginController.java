@@ -7,7 +7,6 @@ import com.example.messaging.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 
 @RestController
@@ -22,14 +21,14 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginData data) {
-        // 1. 驗證帳號密碼
+        // 1. 驗證帳密
         boolean isAuth = authService.verifyCredentials(data.getUsername(), data.getPassword());
         
         if (!isAuth) {
-            return ResponseEntity.status(401).body(Map.of("error", "Login failed"));
+            return ResponseEntity.status(401).body(Map.of("error", "Login failed: Invalid credentials"));
         }
 
-        // 2. 登入成功，取得 User 並發送 Token
+        // 2. 登入成功，取得 User 與 Token
         User user = authService.getUserByUsername(data.getUsername());
         String token = tokenService.generateToken(user.getUserId());
 
