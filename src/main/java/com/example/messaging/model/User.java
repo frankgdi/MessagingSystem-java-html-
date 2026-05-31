@@ -16,7 +16,7 @@ public class User {
 
     public void addFriend(int friendId) {
         if (!this.friends.contains(friendId)) {
-            this.friends.append(friendId); // 在 Java 中建議寫成封裝方法
+            //this.friends.append(friendId); // 在 Java 中建議寫成封裝方法
             this.friends.add(friendId);
         }
     }
